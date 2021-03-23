@@ -1,3 +1,4 @@
+//include("monitoring_base")
 
 // playerがnullのときは全てのplayerを検査対象とする．
 function _get_overcrowded_station(player) {
@@ -44,6 +45,7 @@ class get_overcrowded_cmd {
   }
 }
 
+/*
 class chk_overcrowded_cmd extends monitoring_base_cmd {
   function do_check() {
     local och = _get_overcrowded_station(null)
@@ -52,6 +54,7 @@ class chk_overcrowded_cmd extends monitoring_base_cmd {
     f.close() 
   }
 }
+*/
 
 commands["赤棒"] <- get_overcrowded_cmd()
 monitored.append(get_overcrowded_cmd())
