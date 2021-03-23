@@ -19,7 +19,7 @@ CLIの使用を前提とします．
 
 1. Pythonプログラムを起動します．`python` ディレクトリに移動した上で， `python monitor.py` を実行します．
    このとき，Simutrans動作ディレクトリに`file_io` ディレクトリが作成され，ファイルが配置されます．正常に起動すると，Discordの指定したチャンネルに，`おはようさん．?をつけてなんでもいうてな．` というメッセージが送信されます．
-2. Simutransを起動し，AIプレイヤーを追加します．Scripted AI'sを選択し，左側の有効化ボタンを押します．スクリプトは`sqai_hm_monitor` を選択してください．
+2. Simutransを起動し，AIプレイヤーを追加します．Scripted AI'sを選択し，左側の有効化ボタンを押します．スクリプトは`sqai_hm_monitor` を選択してください．  
    ![画像](images/add_script_player.png)
 
 Simutrans本体より先にPythonプログラムを起動するようにしてください．
@@ -72,6 +72,10 @@ Discordの指定したチャンネルにコマンドを投げることで情報�
 路線単位のデッドロック検知とか．
 
 常時監視型の通知機能も用意する予定です．
+
+## ソース
+
+https://github.com/teamhimeh/simutrans_world_monitor
 
 ## ライセンス
 
