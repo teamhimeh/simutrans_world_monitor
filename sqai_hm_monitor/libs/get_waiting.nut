@@ -8,9 +8,14 @@ class get_waiting_cmd {
   
   // "待機,XX駅" の形式でコマンドを受け取り，XX駅の現在の待機客数を返す．
   function exec(str) {
-    local params = split(str,",")
-    local sta_name = strip(params[1])
     local f = file(path_output,"w")
+    local params = split(str,",")
+    if(params.len()==1) {
+      f.writestr("駅名を指定してな．")
+      f.close() 
+      return
+    }
+    local sta_name = strip(params[1])
     //与えられた駅名をもつ駅を見つける
     this_halt = null
     foreach (h in halt_list_x()) {
