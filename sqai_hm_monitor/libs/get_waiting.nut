@@ -1,6 +1,5 @@
 
 class get_waiting_cmd {
-  this_halt = null
   
   function _min(a,b) {
     return a<b ? a : b
@@ -17,7 +16,7 @@ class get_waiting_cmd {
     }
     local sta_name = strip(params[1])
     //与えられた駅名をもつ駅を見つける
-    this_halt = null
+    local this_halt = null
     foreach (h in halt_list_x()) {
       if(h.get_name()==sta_name) {
         this_halt = h
@@ -32,11 +31,7 @@ class get_waiting_cmd {
     
     //目的地別のリストを作る
     local dest_halts = this_halt.get_connections(good_desc_x.passenger)
-    local dests = [] //[[halt, 待機数]]
-    //ラムダ式の中でthis_haltが参照できないのでfor文で．
-    foreach (d in dest_halts) {
-      dests.append([d, this_halt.get_freight_to_halt(good_desc_x.passenger, d)])
-    }
+    local dests = dest_halts.map(@(d) [d, this_halt.get_freight_to_halt(good_desc_x.passenger, d)]) //[[halt, 待機数]]
     dests = dests.filter(@(i,d) d[1]>0) //待機客0人を除外
     dests.sort(@(a,b) b[1]<=>a[1]) //客の多さでソート．降順
     
