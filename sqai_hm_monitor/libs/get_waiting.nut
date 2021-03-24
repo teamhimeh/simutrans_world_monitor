@@ -57,6 +57,3 @@ class get_waiting_cmd {
     f.close()
   }
 }
-
-
-commands["待機"] <- get_waiting_cmd()

@@ -22,5 +22,3 @@ class get_players_cmd {
     f.close() 
   }
 }
-
-commands["プレイヤー"] <- get_players_cmd()

@@ -2,7 +2,7 @@ include("libs/monitoring_base")
 include("libs/common")
 
 // playerがnullのときは全てのplayerを検査対象とする．
-function _get_overcrowded_halts(player) {
+function _get_overcrowded_halts(player, ratio) {
   local och = []
   foreach (h in halt_list_x()) {
     //なぜかinstanceの比較では==が通らない
@@ -10,7 +10,8 @@ function _get_overcrowded_halts(player) {
       och.append(h)
     }
   }
-  och = och.filter(@(i,h) h.get_waiting()[0]>h.get_capacity(good_desc_x.passenger))
+  local r = ratio
+  och = och.filter(@(i,h) h.get_waiting()[0]>h.get_capacity(good_desc_x.passenger)*r)
   return och
 }
 
@@ -22,7 +23,7 @@ class get_overcrowded_cmd {
     }
     local f = file(path_output,"w")
     local params = split(str,",")
-    local och = _get_overcrowded_halts(player)
+    local och = _get_overcrowded_halts(player,1)
     local out_str = ""
     if(och.len()==0) {
       out_str = player.get_name() + " の駅に赤棒はないです．すばらしい．"
@@ -40,13 +41,15 @@ class get_overcrowded_cmd {
 
 class chk_overcrowded_cmd extends monitoring_base_cmd {
   overcrowded_halts = []
+  warning_ratio = 1.0
   
-  constructor(freq) {
+  constructor(freq, ratio) {
     monthly_check_time = freq
+    warning_ratio = ratio
   }
   
   function do_check() {
-    local och = _get_overcrowded_halts(null)
+    local och = _get_overcrowded_halts(null, warning_ratio)
     local prev_och = overcrowded_halts //ラムダ式のために必要
     // なぜかhalt_xのinstance比較がいつもfalseになるので，nameで比較する．
     // あたらしくovercrowdedになったhalt
@@ -76,6 +79,3 @@ class chk_overcrowded_cmd extends monitoring_base_cmd {
     f.close()
   }
 }
-
-commands["赤棒"] <- get_overcrowded_cmd()
-monitored.append(chk_overcrowded_cmd(16))
