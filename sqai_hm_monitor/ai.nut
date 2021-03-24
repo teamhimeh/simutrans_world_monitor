@@ -47,14 +47,12 @@ function step() {
      // 負荷軽減のため，モニタリングタスクは先送り．
      return
    }
-   /*
    foreach (m in monitored) {
      if(m.check()) {
        // 負荷軽減のため，モニタリングタスクは1つのみ実行．
        return
      }
    }
-   */
 }
 
 function new_month() {
