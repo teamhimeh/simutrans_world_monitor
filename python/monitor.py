@@ -20,7 +20,7 @@ class FileChangeHandler(FileSystemEventHandler):
          filename = os.path.basename(filepath)
          if(filename!="out.txt"):
              return
-         with open(FILE_OUT) as f:
+         with open(FILE_OUT, encoding='utf-8') as f:
              s = f.read()
              if s=='empty':
                  return
@@ -48,12 +48,12 @@ async def on_message(message):
     if message.author.bot or message.channel != channel or message.content[0]!='?':
         return
             
-    with open(FILE_CMD) as f:
+    with open(FILE_CMD, encoding='utf-8') as f:
         s = f.read()
         if not s.startswith('empty'):
             await channel.send('今忙しいねん')
             return
-    with open(FILE_CMD, mode='w') as f:
+    with open(FILE_CMD, mode='w', encoding='utf-8') as f:
         global waiting_message
         f.write(message.content[1:])
         waiting_message = await channel.send('応答待ち．ちょっとまってな．')
@@ -61,10 +61,10 @@ async def on_message(message):
 def generate_io_files():
     os.makedirs(config.DIRECTORY+'/file_io', exist_ok=True)
     if not os.path.isfile(FILE_CMD):
-        with open(FILE_CMD, mode='w') as f:
+        with open(FILE_CMD, mode='w', encoding='utf-8') as f:
             f.write('empty')
     if not os.path.isfile(FILE_OUT):
-        with open(FILE_OUT, mode='w') as f:
+        with open(FILE_OUT, mode='w', encoding='utf-8') as f:
             f.write('empty')
 
 def start():
