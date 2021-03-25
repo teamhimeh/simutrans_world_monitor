@@ -7,3 +7,4 @@ commands["時間"] <- get_time_cmd()
 
 //モニタリング一覧．不要な機能があればコメントアウトしてください．
 monitored.append(chk_overcrowded_cmd(8, 1.5)) //頻度, 警報を出す倍率
+monitored.append(chk_stucked_cmd(4, 0.8)) //頻度, 警報を出す割合
