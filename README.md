@@ -12,7 +12,7 @@ CLIの使用を前提とします．
 2. Python3とpipを導入し， `pip install discord.py watchdog` でライブラリを導入します．
 3. DiscordでBOTアカウントを作成し，BOTをサーバーに招待します．
    参考: https://discordpy.readthedocs.io/ja/latest/discord.html
-4. `python/config.template.py` をコピーして`python/config.py` を作成し，BOTのアクセストークン，メッセージをやり取りするテキストチャンネルのID（Discordで確認できます），Simutransの動作ディレクトリを記入します．
+4. `python/config.template.py` をコピーして`python/config.py` を作成し，BOTのアクセストークン，メッセージをやり取りするテキストチャンネルのID（Discordで確認できます），Simutransの動作ディレクトリを記入します．UTF-8を扱えるエディタで編集してください．
 5. `sqai_hm_monitor` ディレクトリを，Simutransの動作ディレクトリ下の`ai` ディレクトリにコピーします．
 
 ## 起動方法
@@ -100,6 +100,10 @@ Discordの指定したチャンネルにコマンドを投げることで情報�
 ## 追加予定
 
 気が向いたら．アイデアください．
+
+## 変更履歴
+
+[changes.md](changes.md) 
 
 ## ソース
 
