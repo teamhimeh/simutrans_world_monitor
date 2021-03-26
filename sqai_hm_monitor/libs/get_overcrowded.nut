@@ -3,15 +3,14 @@ include("libs/common")
 
 // playerがnullのときは全てのplayerを検査対象とする．
 function _get_overcrowded_halts(player, ratio) {
-  local och = []
-  foreach (h in halt_list_x()) {
+  local och = halt_list_x()
+  if(player!=null) {
+    local pl = player
     //なぜかinstanceの比較では==が通らない
-    if(player==null || h.get_owner().get_name()==player.get_name()) {
-      och.append(h)
-    }
+    och = filter(och, (@(h) h.get_owner().get_name()==pl.get_name()))
   }
   local r = ratio
-  och = och.filter(@(i,h) h.get_waiting()[0]>h.get_capacity(good_desc_x.passenger)*r)
+  och = filter(och, (@(h) h.get_waiting()[0]>h.get_capacity(good_desc_x.passenger)*r))
   return och
 }
 
@@ -53,7 +52,7 @@ class chk_overcrowded_cmd extends monitoring_base_cmd {
     local prev_och = overcrowded_halts //ラムダ式のために必要
     // なぜかhalt_xのinstance比較がいつもfalseになるので，nameで比較する．
     // あたらしくovercrowdedになったhalt
-    local new_och = och.filter(@(i,h) prev_och.filter(@(j,k) k.get_name()==h.get_name()).len()==0)
+    local new_och = filter(och, (@(h) filter(prev_och, (@(k) k.get_name()==h.get_name())).len()==0))
     overcrowded_halts = och //更新
     if(new_och.len()==0) {
       // 新しく混雑した駅はないので，終了．
@@ -61,7 +60,7 @@ class chk_overcrowded_cmd extends monitoring_base_cmd {
     }
     
     // プレイヤーごとにまとめる
-    local player_new_och = get_player_list().map(@(p) [p, new_och.filter(@(i,h) p.get_name()==h.get_owner().get_name())])
+    local player_new_och = map(get_player_list(), (@(p) [p, filter(new_och, (@(h) p.get_name()==h.get_owner().get_name()))]))
     local out_str = "赤棒立ってる駅あるで．\n"
     foreach (pn in player_new_och) {
       if(pn[1].len()==0) {

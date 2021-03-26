@@ -10,44 +10,33 @@ class chk_stucked_cmd extends monitoring_base_cmd {
     warning_ratio = wr
   }
   
-  function _get_waiting_count(line) {
-    local cnt = 0
-    foreach (cnv in line.get_convoy_list()) {
-      if(cnv.is_waiting()) {
-        cnt += 1
-      }
-    }
-    return cnt
+  function _is_stucked_line(line) {
+    local wr = warning_ratio
+    local num_stucked = filter(line.get_convoy_list(), (@(c) c.is_waiting())).len()
+    return num_stucked >= 5 && num_stucked >= line.get_convoy_list().get_count() * wr
   }
   
-  function _get_stucked_lines(pl) {
-    local stucked = []
-    local wr = warning_ratio
-    foreach (line in pl.get_line_list()) {
-      local num_stucked = _get_waiting_count(line)
-      if(num_stucked >= 5 && num_stucked >= line.get_convoy_list().get_count() * wr) {
-        stucked.append(line)
-      }
-    }
-    return stucked
+  // lineはstucked_linesの中に存在していないか？
+  function _not_in_stucked_line(line) {
+    local filtered = filter(stucked_lines, (@(s) s.get_name()==line.get_name() && s.get_owner().get_name()==line.get_owner().get_name()))
+    return filtered.len()==0
   }
   
   function do_check() {
     local stucked = [] //渋滞路線リスト
     foreach (pl in get_player_list()) {
-      stucked.extend(_get_stucked_lines(pl))
+      stucked.extend(filter(pl.get_line_list(), _is_stucked_line))
     }
-    local prev_stucked = stucked_lines
-    local new_stucked = stucked.filter(@(i,h) prev_stucked.filter(@(j,k) h.get_name()==k.get_name() && h.get_owner().get_name()==k.get_owner().get_name()).len()==0)
-    stucked_lines = stucked
+    local new_stucked = filter(stucked, _not_in_stucked_line)
+    stucked_lines = stucked //更新
     if(new_stucked.len()==0) {
       // 新しく渋滞している路線はなし．
       return
     }
     
     //プレイヤーごとに，新しく渋滞した路線
-    local pl_n_stucked = get_player_list().map(@(pl) [pl, new_stucked.filter(@(i, line) line.get_owner().get_name()==pl.get_name())])
-    pl_n_stucked = pl_n_stucked.filter(@(i,p) p[1].len()>0)
+    local pl_n_stucked = map(get_player_list(), (@(pl) [pl, filter(new_stucked, @( line) line.get_owner().get_name()==pl.get_name())]))
+    pl_n_stucked = filter(pl_n_stucked, (@(p) p[1].len()>0))
     local out_str = "この路線渋滞してんで．やばいんとちゃうか．\n"
     foreach (pls in pl_n_stucked) {
       out_str += ("<" + pls[0].get_name() + ">\n")
