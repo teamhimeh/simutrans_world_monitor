@@ -53,12 +53,12 @@ async def on_message(message):
     channel = client.get_channel(config.CHANNEL_ID)
     # 指定チャンネルでの指定フォーマットの人間のメッセージのみ反応
     content = message.content.replace('？','?').replace('，',',')
-    if message.author.bot or message.channel != channel or content[0]!='?':
+    if message.author.bot or message.channel != channel or content[0]!='?' or len(content)<2:
         return
             
     with open(FILE_CMD, encoding='utf-8') as f:
         s = f.read()
-        if not s.startswith('empty'):
+        if not s.startswith('empty') and not s.empty():
             await channel.send('今忙しいねん')
             return
     with open(FILE_CMD, mode='w', encoding='utf-8') as f:
