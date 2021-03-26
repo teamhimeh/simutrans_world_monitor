@@ -25,7 +25,7 @@ class FileChangeHandler(FileSystemEventHandler):
          if(filename!="out.txt"):
              return
          with open(FILE_OUT, encoding='utf-8') as f:
-             s = f.read()
+             s = f.read()[:1990]
              hash = hashlib.md5(s.encode()).hexdigest()
              global prev_out_hash
              if s=='empty' or hash==prev_out_hash:
