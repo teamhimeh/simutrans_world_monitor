@@ -52,7 +52,8 @@ async def on_ready():
 async def on_message(message):
     channel = client.get_channel(config.CHANNEL_ID)
     # 指定チャンネルでの指定フォーマットの人間のメッセージのみ反応
-    if message.author.bot or message.channel != channel or message.content[0]!='?':
+    content = message.content.replace('？','?').replace('，',',')
+    if message.author.bot or message.channel != channel or content[0]!='?':
         return
             
     with open(FILE_CMD, encoding='utf-8') as f:
@@ -62,7 +63,7 @@ async def on_message(message):
             return
     with open(FILE_CMD, mode='w', encoding='utf-8') as f:
         global waiting_message
-        f.write(message.content[1:])
+        f.write(content[1:])
         waiting_message = await channel.send('応答待ち．ちょっとまってな．')
         
 def generate_io_files():
