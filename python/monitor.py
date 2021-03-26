@@ -65,6 +65,8 @@ async def on_message(message):
         global waiting_message
         f.write(content[1:])
         waiting_message = await channel.send('応答待ち．ちょっとまってな．')
+        global prev_out_hash
+        prev_out_hash = None
         
 def generate_io_files():
     os.makedirs(config.DIRECTORY+'/file_io', exist_ok=True)
