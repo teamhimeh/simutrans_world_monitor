@@ -4,6 +4,7 @@ class get_time_cmd {
   function exec(str) {
     local time = world.get_time()
     local f = file(path_output,"w")
+	time.month = time.month + 1
     f.writestr("今？" + time.year + "年" + time.month + "月ちゃうか．")
     f.close() 
   }
