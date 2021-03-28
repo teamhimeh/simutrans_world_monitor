@@ -5,6 +5,7 @@ include("libs/get_players")
 include("libs/get_overcrowded")
 include("libs/get_time")
 include("libs/get_stucked")
+include("libs/get_finance")
 include("config")
 
 function start(pl_num) {
