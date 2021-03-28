@@ -2,7 +2,7 @@ include("libs/monitoring_base")
 include("libs/common")
 
 // playerがnullのときは全てのplayerを検査対象とする．
-function _get_overcrowded_halts(player, ratio) {
+function _get_overcrowded_halts(player, ratio, akabo) {
   local och = halt_list_x()
   if(player!=null) {
     local pl = player
@@ -10,7 +10,8 @@ function _get_overcrowded_halts(player, ratio) {
     och = filter(och, (@(h) h.get_owner().get_name()==pl.get_name()))
   }
   local r = ratio
-  och = filter(och, (@(h) h.get_waiting()[0]>h.get_capacity(good_desc_x.passenger)*r))
+  local a = akabo
+  och = filter(och, (@(h) h.get_waiting()[0]>h.get_capacity(good_desc_x.passenger)*r && h.get_waiting()[0]>a))
   return och
 }
 
@@ -22,7 +23,7 @@ class get_overcrowded_cmd {
     }
     local f = file(path_output,"w")
     local params = split(str,",")
-    local och = _get_overcrowded_halts(player,1)
+    local och = _get_overcrowded_halts(player,1, 0)
     local out_str = ""
     if(och.len()==0) {
       out_str = player.get_name() + " の駅に赤棒はないです．すばらしい．"
@@ -41,14 +42,16 @@ class get_overcrowded_cmd {
 class chk_overcrowded_cmd extends monitoring_base_cmd {
   overcrowded_halts = []
   warning_ratio = 1.0
+  akabo_max = 1000
   
-  constructor(freq, ratio) {
+  constructor(freq, ratio, akabo) {
     monthly_check_time = freq
     warning_ratio = ratio
+	akabo_max = akabo
   }
   
   function do_check() {
-    local och = _get_overcrowded_halts(null, warning_ratio)
+    local och = _get_overcrowded_halts(null, warning_ratio, akabo_max)
     local prev_och = overcrowded_halts //ラムダ式のために必要
     // なぜかhalt_xのinstance比較がいつもfalseになるので，nameで比較する．
     // あたらしくovercrowdedになったhalt
