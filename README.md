@@ -8,8 +8,7 @@ pythonプログラムとSquirrel AI Playerから成り立っています．pytho
 
 CLIの使用を前提とします．
 
-1. `git clone https://github.com/teamhimeh/simutrans_world_monitor` でコードをcloneします．
-2. Python3とpipを導入し， `pip install discord.py watchdog` でライブラリを導入します．
+1. Python3とpipを導入し， `pip install discord.py watchdog` でライブラリを導入します．
 3. DiscordでBOTアカウントを作成し，BOTをサーバーに招待します．
    参考: https://discordpy.readthedocs.io/ja/latest/discord.html
 4. `python/config.template.py` をコピーして`python/config.py` を作成し，BOTのアクセストークン，メッセージをやり取りするテキストチャンネルのID（Discordで確認できます），Simutransの動作ディレクトリを記入します．UTF-8を扱えるエディタで編集してください．
@@ -77,16 +76,23 @@ Discordの指定したチャンネルにコマンドを投げることで情報�
 
 現在の年と月を返します．
 
+#### 各社の残金を取得
+
+書式：`?財政` 
+
+各社の現在の残金を返します．
+
 ### 常時監視系
 
 #### 定員オーバーの駅を監視
 
 待機客が定員オーバーの駅が発生すると，通知します．
 
-`config.nut` のパラメーター：`chk_overcrowded_cmd(頻度, 割合))`
+`config.nut` のパラメーター：`chk_overcrowded_cmd(頻度, 割合, 最低待機数))`
 
 - 頻度 ... 月あたり何回このチェックを行うか．
 - 割合 ... 駅の定員に対して何倍の客が溜まったときに通知を行うか．
+- 最低待機数 ... 通知を行う待機客の最低値．
 
 #### デッドロックした路線を監視
 
