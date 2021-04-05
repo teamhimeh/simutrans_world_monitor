@@ -4,3 +4,7 @@
 TOKEN = r"fugafuga"
 CHANNEL_ID = 1145141919810
 DIRECTORY = r"/Users/XXX/simutrans"
+
+TEXT_HELLO = 'おはようさん．?をつけてなんでもいうてな．'
+TEXT_BUSY  = '今忙しいねん'
+TEXT_WAIT  = '応答待ち．ちょっとまってな．'
