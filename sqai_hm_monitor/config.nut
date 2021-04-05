@@ -1,4 +1,12 @@
 
+include("libs/global")
+include("libs/get_waiting")
+include("libs/get_players")
+include("libs/get_overcrowded")
+include("libs/get_time")
+include("libs/get_stucked")
+include("libs/get_finance")
+
 //コマンド一覧．不要な機能があればコメントアウトしてください．
 commands["待機"] <- get_waiting_cmd()
 commands["プレイヤー"] <- get_players_cmd()
