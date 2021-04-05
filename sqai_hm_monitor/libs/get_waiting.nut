@@ -1,3 +1,8 @@
+// メッセージ定義
+local text_require_param = "駅名を指定してな．"
+local text_invalid_param = "停車場 %s ←ないです．"
+local text_waiting_title = "%sの待機客は %d/%d人やね．\n" //%sは停留所名，%dは待機客数，停留所容量
+local text_dest_info = "%d人 ... %s\n" //%dは待機客数，%sは目的地
 
 class get_waiting_cmd {
   
@@ -10,7 +15,7 @@ class get_waiting_cmd {
     local f = file(path_output,"w")
     local params = split(str,",")
     if(params.len()==1) {
-      f.writestr("駅名を指定してな．")
+      f.writestr(text_require_param)
       f.close() 
       return
     }
@@ -24,7 +29,7 @@ class get_waiting_cmd {
       }
     }
     if(this_halt==null) {
-      f.writestr("停車場 " + sta_name + " ←ないです．")
+      f.writestr(format(text_invalid_param, sta_name))
       f.close() 
       return
     }
@@ -36,7 +41,7 @@ class get_waiting_cmd {
     dests.sort(@(a,b) b[1]<=>a[1]) //客の多さでソート．降順
     
     //結果を出力
-    local out_str = sta_name + "の待機客は " + this_halt.get_waiting()[0].tostring() + "人/" + this_halt.get_capacity(good_desc_x.passenger).tostring() + "人 やね．\n"
+    local out_str = format(text_waiting_title, sta_name, this_halt.get_waiting()[0], this_halt.get_capacity(good_desc_x.passenger))
     local num_of_dests = 5 //デフォルトでは5件
     if(params.len()>=3) {
       try{
@@ -46,7 +51,7 @@ class get_waiting_cmd {
       }
     }
     for (local i=0; i<_min(num_of_dests, dests.len()); i++) {
-      out_str += (dests[i][1].tostring() + "人 ... " + dests[i][0].get_name() + "\n")
+      out_str += format(text_dest_info, dests[i][1], dests[i][0].get_name())
     }
     f.writestr(rstrip(out_str))
     f.close()

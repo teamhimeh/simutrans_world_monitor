@@ -1,3 +1,7 @@
+// メッセージ定義
+local text_title = "この路線渋滞してんで．やばいんとちゃうか．\n"
+local text_player_title = "<%s>\n" //%sはプレイヤー名
+
 include("libs/monitoring_base")
 include("libs/common")
 
@@ -37,9 +41,9 @@ class chk_stucked_cmd extends monitoring_base_cmd {
     //プレイヤーごとに，新しく渋滞した路線
     local pl_n_stucked = map(get_player_list(), (@(pl) [pl, filter(new_stucked, @( line) line.get_owner().get_name()==pl.get_name())]))
     pl_n_stucked = filter(pl_n_stucked, (@(p) p[1].len()>0))
-    local out_str = "この路線渋滞してんで．やばいんとちゃうか．\n"
+    local out_str = text_title
     foreach (pls in pl_n_stucked) {
-      out_str += ("<" + pls[0].get_name() + ">\n")
+      out_str += format(text_player_title, pls[0].get_name())
       foreach (line in pls[1]) {
         out_str += (line.get_name() + "\n")
       }

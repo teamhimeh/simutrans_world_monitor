@@ -1,3 +1,12 @@
+// メッセージ定義
+// コマンドに対する応答
+local textc_no_player = "%s の駅に赤棒はないです．すばらしい．" //%sはプレイヤー名
+local textc_player_title = "%s の赤棒駅はこれや！\n" //%sはプレイヤー名
+local textc_halt_info = "%s ... %d/%d\n" //赤棒状態の停留所情報． %sは停留所名． %dは待機数，定員．
+// 監視によるメッセージ
+local textm_oc_exists = "赤棒立ってる駅あるで．\n"
+local textm_player_title = "<%s>\n" //%sはプレイヤー名
+
 include("libs/monitoring_base")
 include("libs/common")
 
@@ -26,11 +35,11 @@ class get_overcrowded_cmd {
     local och = _get_overcrowded_halts(player,1, 0)
     local out_str = ""
     if(och.len()==0) {
-      out_str = player.get_name() + " の駅に赤棒はないです．すばらしい．"
+      out_str = format(textc_no_player, player.get_name())
     } else {
-      out_str = player.get_name() + " の赤棒駅はこれや！\n"
+      out_str = format(textc_player_title, player.get_name())
       foreach (h in och) {
-        out_str += (h.get_name() + " ... " + h.get_waiting()[0].tostring() + "/" + h.get_capacity(good_desc_x.passenger).tostring() + "人\n")
+        out_str += format(textc_halt_info, h.get_name(), h.get_waiting()[0], h.get_capacity(good_desc_x.passenger))
       }
     }
     f.writestr(rstrip(out_str))
@@ -64,15 +73,15 @@ class chk_overcrowded_cmd extends monitoring_base_cmd {
     
     // プレイヤーごとにまとめる
     local player_new_och = map(get_player_list(), (@(p) [p, filter(new_och, (@(h) p.get_name()==h.get_owner().get_name()))]))
-    local out_str = "赤棒立ってる駅あるで．\n"
+    local out_str = textm_oc_exists
     foreach (pn in player_new_och) {
       if(pn[1].len()==0) {
         //この会社に混雑してる駅はない．
         continue
       }
-      out_str += ("<" + pn[0].get_name() + ">\n")
+      out_str += format(textm_player_title, pn[0].get_name())
       foreach (h in pn[1]) {
-        out_str += (h.get_name() + " ... " + h.get_waiting()[0].tostring() + "/" + h.get_capacity(good_desc_x.passenger).tostring() + "人\n")
+        out_str += format(textc_halt_info, h.get_name(), h.get_waiting()[0], h.get_capacity(good_desc_x.passenger))
       }
     }
     
