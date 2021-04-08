@@ -7,12 +7,13 @@ include("libs/common")
 class get_players_cmd {
   // プレイヤーの一覧を返す
   function exec(str) {
-    local idx = 1
     local str = text_title
-    foreach (player in get_player_list()) {
-      str += format(text_player, idx, player.get_name())
-      idx += 1
-    }
+	for (local i=0; i<20; i++) {
+		local pl = player_x(i)
+		if(pl.is_valid()) {
+			str += format(text_player, i+1, pl.get_name())
+		} 
+	}
     local f = file(path_output,"w")
     f.writestr(rstrip(str))
     f.close() 

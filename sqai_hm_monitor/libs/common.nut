@@ -29,9 +29,7 @@ function get_player_list() {
     local pl = player_x(i)
     if(pl.is_valid()) {
       pl_list.append(pl)
-    } else {
-      break
-    }
+    } 
   }
   return pl_list
 }
