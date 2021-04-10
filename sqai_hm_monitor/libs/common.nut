@@ -57,3 +57,16 @@ function map(array, func) {
   }
   return new_array
 }
+
+function _comma_separate(string) {
+	local digit = 4 // 桁区切り
+	local separated = ""
+	while(string.len()>digit) {
+		local len = string.len()
+		separated = string.slice(len-digit,len) + separated
+		if(len >= digit+1) separated = "," + separated
+		string = string.slice(0,len-digit)
+	}
+	separated = string + separated
+	return separated
+}
