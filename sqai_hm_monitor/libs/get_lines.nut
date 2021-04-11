@@ -14,30 +14,24 @@ class get_lines_cmd {
     if(player==null) {
       return //エラーメッセージは既に吐かれている．
     }
-    local num = player.get_line_list().get_count()
-    if(num == 0) {
+    local LINE_CNT = filter(player.get_line_list(), (@(l) l.is_valid())).len()
+    if(LINE_CNT == 0) {
       f.writestr(format(text_no_lines,player.get_name()))
       f.close() 
       return
     }
-    local str = format(text_title, player.get_name(), num)
+    local str = format(text_title, player.get_name(), LINE_CNT)
     
-    //ワールド内の路線総数を取得
-    local max = 0
-    for(local i=0; i<20; i++) {
-      local pl = player_x(i)
-      if(pl.is_valid()) {
-        max += pl.get_line_list().get_count()
-      } 
-    }
-    
-    //当該会社の路線一覧を取得
-    for(local i=1; i<=max; i++) {
+    // 路線のidがわからないので，プレイヤーの路線がすべて出現するまでイテレートする．
+    local cnt = 0
+    for(local i=0; cnt<LINE_CNT; i++) {
       local line = line_x(i)
-      if(line.get_owner().get_name() == player.get_name()) {
+      if(line.is_valid() && line.get_owner().get_name() == player.get_name()) {
         str += format(text_line, i, line.get_name())
+        cnt += 1
       }
     }
+    
     f.writestr(rstrip(str))
     f.close() 
   }
