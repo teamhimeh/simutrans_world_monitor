@@ -1,6 +1,6 @@
 // メッセージ定義
 local text_title = "有り金はこんな感じや！\n"
-local money_info = "%s:  %s￠\n"
+local text_money_info = "%s:  %s￠\n"
 
 include("libs/common")
 
@@ -11,7 +11,7 @@ class get_finances_cmd {
     local str = text_title
     foreach (player in get_player_list()) {
 	  local cash = _comma_separate(format("%.f",player.get_current_cash()))
-      str += format(money_info, player.get_name(), cash)
+      str += format(text_money_info, player.get_name(), cash)
       idx += 1
     }
     local f = file(path_output,"w")
