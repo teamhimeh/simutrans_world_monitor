@@ -1,7 +1,7 @@
 // メッセージ定義
 local text_title = "%s の路線一覧（計 %d 路線） \n" //%sは会社名
 local text_line = "%d : %s\n" //%dは番号， %sは路線名
-local text_no_lines = "%s の路線は見当たりませんなあ．\n" //%dは番号， %sは路線名
+local text_no_lines = "%s の路線は見当たりませんなあ．" //%dは番号， %sは路線名
 
 
 include("libs/common")
