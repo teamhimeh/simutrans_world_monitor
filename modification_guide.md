@@ -59,6 +59,8 @@ commands["復唱"] <- get_echo_cmd() // コマンド名と実行インスタン�
 の手順を踏みます．例えば，デッドロックを検知する`libs/get_stucked.nut` は下のようになっています．
 
 ```squirrel
+include("libs/monitoring_base")
+
 // モニタリングタスクのclass名プレフィックスは'chk'がおすすめ．
 class chk_stucked_cmd extends monitoring_base_cmd {
   stucked_lines = []
@@ -87,3 +89,13 @@ include("libs/get_stucked") // libs/get_stucked.nutをincludeする
 monitored.append(chk_stucked_cmd(8, 0.8)) // パラメータを指定しながら登録
 ```
 
+## common.nut について
+
+`libs/common.nut` をincludeすると，
+
+- map（squirrel standard libraryの[array.map()で生じる諸問題](https://japanese.simutrans.com/index.php?%A5%B9%A5%AF%A5%EA%A5%D7%A5%C8%B3%AB%C8%AF%2FTips%BD%B8#a1ada227) に対処しています）
+- filter（同上）
+- プレイヤー番号からプレイヤーobjectを取得
+- プレイヤーobject一覧を取得
+
+などができるようになります．
