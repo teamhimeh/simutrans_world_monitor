@@ -22,4 +22,4 @@ commands["停車駅"] <- get_halts_cmd()
 //モニタリング一覧．不要な機能があればコメントアウトしてください．
 monitored.append(chk_overcrowded_cmd(8, 1.5, 1000)) //赤棒検知． 引数...(頻度,警報を出す倍率, 警報を出す下限)
 monitored.append(chk_stucked_cmd(4, 0.8)) //デッドロック検知． 引数...(頻度,警報を出す割合)
-monitored.append(chk_count_cmd(64)) //動作確認用モニタリングタスク
+//monitored.append(chk_count_cmd(64)) //動作確認用モニタリングタスク

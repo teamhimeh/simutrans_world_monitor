@@ -8,7 +8,7 @@ function start(pl_num) {
 }
 
 function resume_game(pl_num) {
-  
+  monitoring_state().load()
 }
 
 // リクエストが実行されたときにはtrueを返す．
