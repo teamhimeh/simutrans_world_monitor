@@ -6,7 +6,7 @@ include("libs/monitoring_base")
 include("libs/common")
 
 class chk_stucked_cmd extends monitoring_base_cmd {
-  stucked_lines = []
+  stucked_lines = [] // stuckした路線の[名前,プレイヤー名]を保持する
   warning_ratio = 0.5
   
   constructor(m, wr) {
@@ -22,17 +22,22 @@ class chk_stucked_cmd extends monitoring_base_cmd {
   
   // lineはstucked_linesの中に存在していないか？
   function _not_in_stucked_line(line) {
-    local filtered = filter(stucked_lines, (@(s) s.get_name()==line.get_name() && s.get_owner().get_name()==line.get_owner().get_name()))
+    local filtered = filter(stucked_lines, (@(s) s[0]==line.get_name() && s[1]==line.get_owner().get_name()))
     return filtered.len()==0
   }
   
   function do_check() {
+    local ms = monitoring_state()
+    local p_name = "chk_stucked_cmd"
+    ms.register(p_name,[["sl", []]])
+    stucked_lines = ms.state[p_name]["sl"]
     local stucked = [] //渋滞路線リスト
     foreach (pl in get_player_list()) {
       stucked.extend(filter(pl.get_line_list(), _is_stucked_line))
     }
     local new_stucked = filter(stucked, _not_in_stucked_line)
-    stucked_lines = stucked //更新
+    ms.state[p_name]["sl"] = map(stucked, (@(l) [l.get_name(), l.get_owner().get_name()])) //更新
+    ms.save()
     if(new_stucked.len()==0) {
       // 新しく渋滞している路線はなし．
       return
