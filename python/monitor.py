@@ -52,7 +52,7 @@ async def on_ready():
 async def on_message(message):
     channel = client.get_channel(config.CHANNEL_ID)
     # 指定チャンネルでの指定フォーマットの人間のメッセージのみ反応
-    content = message.content.replace('？','?').replace('，',',')
+    content = message.content.replace('？','?').replace('，',',').replace('、',',')
     if message.author.bot or message.channel != channel or content[0]!='?' or len(content)<2:
         return
             
