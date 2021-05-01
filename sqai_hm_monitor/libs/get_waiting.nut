@@ -4,6 +4,8 @@ local text_invalid_param = "停車場 %s ←ないです．"
 local text_waiting_title = "%sの待機客は %d/%d人やね．\n" //%sは停留所名，%dは待機客数，停留所容量
 local text_dest_info = "%d人 ... %s\n" //%dは待機客数，%sは目的地
 
+include("libs/embed_out")
+
 class get_waiting_cmd {
   
   function _min(a,b) {
@@ -17,6 +19,7 @@ class get_waiting_cmd {
     if(params.len()==1) {
       f.writestr(text_require_param)
       f.close() 
+      embed_error(text_require_param)
       return
     }
     local sta_name = strip(params[1])
@@ -31,6 +34,7 @@ class get_waiting_cmd {
     if(this_halt==null) {
       f.writestr(format(text_invalid_param, sta_name))
       f.close() 
+      embed_error(format(text_invalid_param, sta_name))
       return
     }
     
@@ -55,5 +59,8 @@ class get_waiting_cmd {
     }
     f.writestr(rstrip(out_str))
     f.close()
+    
+    local title = format(text_waiting_title, sta_name, this_halt.get_waiting()[0], this_halt.get_capacity(good_desc_x.passenger))
+    embed_normal(title, out_str)
   }
 }
