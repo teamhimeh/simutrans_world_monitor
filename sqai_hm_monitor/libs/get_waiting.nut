@@ -14,11 +14,8 @@ class get_waiting_cmd {
   
   // "待機,XX駅" の形式でコマンドを受け取り，XX駅の現在の待機客数を返す．
   function exec(str) {
-    local f = file(path_output,"w")
     local params = split(str,",")
     if(params.len()==1) {
-      f.writestr(text_require_param)
-      f.close() 
       embed_error(text_require_param)
       return
     }
@@ -32,8 +29,6 @@ class get_waiting_cmd {
       }
     }
     if(this_halt==null) {
-      f.writestr(format(text_invalid_param, sta_name))
-      f.close() 
       embed_error(format(text_invalid_param, sta_name))
       return
     }
@@ -45,7 +40,10 @@ class get_waiting_cmd {
     dests.sort(@(a,b) b[1]<=>a[1]) //客の多さでソート．降順
     
     //結果を出力
-    local out_str = format(text_waiting_title, sta_name, this_halt.get_waiting()[0], this_halt.get_capacity(good_desc_x.passenger))
+    local num_waiting = this_halt.get_waiting()[0]
+    local capacity = this_halt.get_capacity(good_desc_x.passenger)
+    local title = format(text_waiting_title, sta_name, num_waiting, capacity)
+    local out_str = ""
     local num_of_dests = 5 //デフォルトでは5件
     if(params.len()>=3) {
       try{
@@ -57,10 +55,10 @@ class get_waiting_cmd {
     for (local i=0; i<_min(num_of_dests, dests.len()); i++) {
       out_str += format(text_dest_info, dests[i][1], dests[i][0].get_name())
     }
-    f.writestr(rstrip(out_str))
-    f.close()
-    
-    local title = format(text_waiting_title, sta_name, this_halt.get_waiting()[0], this_halt.get_capacity(good_desc_x.passenger))
-    embed_normal(title, out_str)
+    if(num_waiting>capacity) {
+      embed_warn(title, out_str)
+    } else {
+      embed_normal(title, out_str)
+    }
   }
 }
