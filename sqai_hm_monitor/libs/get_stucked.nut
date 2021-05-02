@@ -30,8 +30,9 @@ class chk_stucked_cmd extends monitoring_base_cmd {
     local ms = monitoring_state()
     local p_name = "chk_stucked_cmd"
     ms.register(p_name,[["sl", []]])
+    // 渋滞路線をチェック
     stucked_lines = ms.state[p_name]["sl"]
-    local stucked = [] //渋滞路線リスト
+    local stucked = [] // 渋滞路線リスト
     foreach (pl in get_player_list()) {
       stucked.extend(filter(pl.get_line_list(), _is_stucked_line))
     }
@@ -47,14 +48,14 @@ class chk_stucked_cmd extends monitoring_base_cmd {
     local pl_n_stucked = map(get_player_list(), (@(pl) [pl, filter(new_stucked, @( line) line.get_owner().get_name()==pl.get_name())]))
     pl_n_stucked = filter(pl_n_stucked, (@(p) p[1].len()>0))
     local out_str = text_title
+    local pl_stucked_msgs = []
     foreach (pls in pl_n_stucked) {
-      out_str += format(text_player_title, pls[0].get_name())
+      local out_str = ""
       foreach (line in pls[1]) {
         out_str += (line.get_name() + "\n")
       }
+      pl_stucked_msgs.append([format(text_player_title, pls[0].get_name()), out_str])
     }
-    local f = file(path_output,"w")
-    f.writestr(rstrip(out_str))
-    f.close()
+    embed_warn(text_title, null, pl_stucked_msgs)
   }
 }
