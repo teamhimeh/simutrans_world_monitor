@@ -15,7 +15,7 @@ FILE_CMD = config.DIRECTORY + '/file_io/cmd.txt'
 async def on_ready():
     # 起動したらターミナルにログイン通知が表示される
     channel = client.get_channel(config.CHANNEL_ID)
-    await channel.send(config.TEXT_HELLO)
+    await channel.send(embed=discord.Embed(title=config.TEXT_HELLO, color=0x00ff00))
 
 # メッセージ受信時に動作する処理
 @client.event
