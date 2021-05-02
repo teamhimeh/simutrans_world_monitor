@@ -4,6 +4,7 @@ local text_player_title = "<%s>\n" //%sはプレイヤー名
 
 include("libs/monitoring_base")
 include("libs/common")
+include("libs/embed_out")
 
 class chk_stucked_cmd extends monitoring_base_cmd {
   stucked_lines = [] // stuckした路線の[名前,プレイヤー名]を保持する
