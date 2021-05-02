@@ -47,6 +47,8 @@ class FileChangeHandler(FileSystemEventHandler):
             if jo["fields"]:
                 for f in jo["fields"]:
                     embed.add_field(name=f["name"], value=f["value"], inline=True)
+            if jo["footer"]:
+                embed.set_footer(text=jo["footer"])
             coro = ch.send(embed=embed)
             asyncio.run_coroutine_threadsafe(coro, client.loop)
         
