@@ -1,5 +1,3 @@
-// メッセージ定義
-local text_invalid_cmd = "コマンド %s ←ないです．\n使い方はココ見てな．\n https://github.com/teamhimeh/simutrans_world_monitor#使用方法"
 
 include("config")
 include("libs/get_help")
