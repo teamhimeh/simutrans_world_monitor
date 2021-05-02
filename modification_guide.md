@@ -27,13 +27,12 @@ discordで`?復唱,こんにちは` と入力したときに，`復唱！こん�
 // メッセージ定義．出力文字列はこのようにロジックから分離しましょう．
 local text_echo = "復唱！%s"
 
+include("libs/embed_out")
 class get_echo_cmd {
   function exec(str) {
     // strは，「復唱,こんにちは」という文字列が渡される．discordの文字列から冒頭の?を抜いた形．
     local params = split(str,",") // カンマで区切って配列にする
-    local f = file(path_output,"w") // 出力用ファイルオブジェクトを取得
-    f.writestr(format(text_echo, params[1])) // 文字列を書き込む
-    f.close() // ファイルをclose
+    embed_normal(format(text_echo, params[1])) // 通常メッセージとして文字列を書き込む
   }
 }
 ```
@@ -48,6 +47,13 @@ commands["復唱"] <- get_echo_cmd() // コマンド名と実行インスタン�
 ```
 
 これで，`get_echo_cmd` クラスの`exec()` 関数が呼ばれるようになりました．
+
+### メッセージの送信方法
+
+Simutrans World Monitorでは、2つのメッセージ送信方法を用意しています。
+
+- **プレーンテキスト** ... `file_io/out.txt` に文字列を保存すると、内容がプレーンテキストとして送信されます。
+- **Embedメッセージ** ... `libs/embed_out.nut` に定義された関数群を用いると、内容をEmbedメッセージとして送信できます。内部的には`file_io/out_embed.json` を介してやりとりしています。
 
 ## モニタリングタスクを追加する
 
@@ -88,6 +94,10 @@ class chk_stucked_cmd extends monitoring_base_cmd {
 include("libs/get_stucked") // libs/get_stucked.nutをincludeする
 monitored.append(chk_stucked_cmd(8, 0.8)) // パラメータを指定しながら登録
 ```
+
+### 状態の外部保存について
+
+ゲームを読み込むとScriptを実行するVMがリセットされるため、NSの運用などにおいて外部に状態を保存することが必要な場合があります。`monitoring_state()` クラスを使うことで状態を永続化することができます。使い方は`libs/chk_count.nut` の例を参照してください。
 
 ## common.nut について
 
