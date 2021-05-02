@@ -42,10 +42,11 @@ class FileChangeHandler(FileSystemEventHandler):
                 return
             ch = client.get_channel(config.CHANNEL_ID)
             self.remove_waiting_message(ch)
-            #jo = json.loads(s)
             jo = json.JSONDecoder().raw_decode(s)[0]
-            print(jo)
             embed = discord.Embed(title=jo["title"], description=jo["description"], color=jo["color"])
+            if jo["fields"]:
+                for f in jo["fields"]:
+                    embed.add_field(name=f["name"], value=f["value"], inline=True)
             coro = ch.send(embed=embed)
             asyncio.run_coroutine_threadsafe(coro, client.loop)
         
