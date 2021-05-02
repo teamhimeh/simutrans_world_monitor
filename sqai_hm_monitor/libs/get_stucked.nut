@@ -15,10 +15,25 @@ class chk_stucked_cmd extends monitoring_base_cmd {
     warning_ratio = wr
   }
   
+  // convoyの座標が車庫かどうか
+  // 出庫待ちの編成を判定から除外する
+  function _is_in_depot(cnv) {
+    local pos = cnv.get_pos()
+    local tile = tile_x(pos.x, pos.y, pos.z)
+    local mo_depots = [mo_depot_rail, mo_depot_road, mo_depot_water, mo_depot_air, mo_depot_monorail, mo_depot_tram, mo_depot_maglev, mo_depot_narrowgauge]
+    foreach (m in mo_depots) {
+      if(tile!=null && tile.find_object(m)!=null) {
+        return true
+      }
+    }
+    return false
+  }
+  
   function _is_stucked_line(line) {
     local wr = warning_ratio
-    local num_stucked = filter(line.get_convoy_list(), (@(c) c.is_waiting())).len()
-    return num_stucked >= 5 && num_stucked >= line.get_convoy_list().get_count() * wr
+    local cnv_to_check = filter(line.get_convoy_list(), (@(c) !c.is_in_depot()))
+    local num_stucked = filter(cnv_to_check, (@(c) c.is_waiting() && !_is_in_depot(c))).len()
+    return num_stucked >= 5 && num_stucked >= cnv_to_check.len() * wr
   }
   
   // lineはstucked_linesの中に存在していないか？
