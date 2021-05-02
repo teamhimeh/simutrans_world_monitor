@@ -2,12 +2,23 @@ include("libs/JSONEncoder.class")
 include("libs/JSONParser.class")
 
 class monitoring_base_cmd {
+  states = []
+  task_name = ""
   monthly_check_time = 4
-  last_check_tick = 0
+  
+  function init_states(name, vals) {
+    task_name = name
+    states = vals
+    states.append(["last_check_tick", 0])
+  }
+  
   function check() {
+    local ms = monitoring_state()
+    ms.register(task_name, states) // stateの登録
+    local last_check_tick = ms.state[task_name]["last_check_tick"]
     local tick = world.get_time().ticks
     if(tick-last_check_tick > world.get_time().ticks_per_month/monthly_check_time || last_check_tick-tick > world.get_time().ticks_per_month) {
-      last_check_tick = tick
+      ms.state[task_name]["last_check_tick"] = tick
       do_check()
       return true
     } else {

@@ -13,6 +13,7 @@ class chk_stucked_cmd extends monitoring_base_cmd {
   constructor(m, wr) {
     monthly_check_time = m
     warning_ratio = wr
+    init_states("chk_stucked_cmd", [["sl", []]])
   }
   
   // convoyの座標が車庫かどうか
@@ -44,16 +45,14 @@ class chk_stucked_cmd extends monitoring_base_cmd {
   
   function do_check() {
     local ms = monitoring_state()
-    local p_name = "chk_stucked_cmd"
-    ms.register(p_name,[["sl", []]])
     // 渋滞路線をチェック
-    stucked_lines = ms.state[p_name]["sl"]
+    stucked_lines = ms.state[task_name]["sl"]
     local stucked = [] // 渋滞路線リスト
     foreach (pl in get_player_list()) {
       stucked.extend(filter(pl.get_line_list(), _is_stucked_line))
     }
     local new_stucked = filter(stucked, _not_in_stucked_line)
-    ms.state[p_name]["sl"] = map(stucked, (@(l) [l.get_name(), l.get_owner().get_name()])) //更新
+    ms.state[task_name]["sl"] = map(stucked, (@(l) [l.get_name(), l.get_owner().get_name()])) //更新
     ms.save()
     if(new_stucked.len()==0) {
       // 新しく渋滞している路線はなし．

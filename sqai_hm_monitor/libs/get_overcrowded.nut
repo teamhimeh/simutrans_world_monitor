@@ -48,26 +48,24 @@ class get_overcrowded_cmd {
 
 
 class chk_overcrowded_cmd extends monitoring_base_cmd {
-  //overcrowded_halts = []
   warning_ratio = 1.0
   akabo_max = 1000
   
   constructor(freq, ratio, akabo) {
     monthly_check_time = freq
     warning_ratio = ratio
-	akabo_max = akabo
+	  akabo_max = akabo
+    init_states("chk_overcrowded_cmd", [["och", []]])
   }
   
   function do_check() {
     local ms = monitoring_state()
-    local p_name = "chk_overcrowded_cmd"
-    ms.register(p_name,[["och", []]])
     local och = _get_overcrowded_halts(null, warning_ratio, akabo_max)
-    local prev_och = ms.state[p_name]["och"] // nameのstring値が格納されている
+    local prev_och = ms.state[task_name]["och"] // nameのstring値が格納されている
     // なぜかhalt_xのinstance比較がいつもfalseになるので，nameで比較する．
     // あたらしくovercrowdedになったhalt
     local new_och = filter(och, (@(h) filter(prev_och, (@(k) k==h.get_name())).len()==0))
-    ms.state[p_name]["och"] = map(och, (@(h) h.get_name())) //更新
+    ms.state[task_name]["och"] = map(och, (@(h) h.get_name())) //更新
     ms.save()
     if(new_och.len()==0) {
       // 新しく混雑した駅はないので，終了．
