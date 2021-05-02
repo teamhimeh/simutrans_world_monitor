@@ -51,36 +51,36 @@ class get_halts_cmd {
     if(params.len()>=3) {
       try{
         num_of_halts = params[2].tointeger()
-        }catch(err) {
-          // 3つ目のパラメタが整数にできなければスキップ
-        }
-      }
-      if(num_of_halts > 0) {
-        // 乗降客の多さでソートして出力
-        halts.sort(@(a,b) b[1]<=>a[1])
-        out_str += format(text_halt_title_rank, line.get_name() ,pl.get_name())
-        
-        local halt_name = null
-        local n = 0
-        for (local i=0; i<halts.len(); i++) {
-          if(halts[i][0].get_name() != halt_name) {	//駅名（と乗降客数）が前の駅と一致→同一駅とする
-            halt_name = halts[i][0].get_name()
-            out_str += format(text_halt_rank, _comma_separate(halts[i][1].tostring()), halt_name)
-            n += 1
-          }
-          if(n == num_of_halts) break
-        }
-        out_str += text_halt_caption_rank
-        f.writestr(rstrip(out_str))
-        f.close()
-        }else{
-          // 停車順に一覧を出力（重複を認める）
-          out_str += format(text_halt_title_all, line.get_name() ,pl.get_name())
-          for (local i=0; i<halts.len(); i++) {
-            out_str += halts[i][0].get_name() + "\n"
-          }
-          f.writestr(rstrip(out_str))
-          f.close()
-        }
+      }catch(err) {
+        // 3つ目のパラメタが整数にできなければスキップ
       }
     }
+    if(num_of_halts > 0) {
+      // 乗降客の多さでソートして出力
+      halts.sort(@(a,b) b[1]<=>a[1])
+      out_str += format(text_halt_title_rank, line.get_name() ,pl.get_name())
+      
+      local halt_name = null
+      local n = 0
+      for (local i=0; i<halts.len(); i++) {
+        if(halts[i][0].get_name() != halt_name) {	//駅名（と乗降客数）が前の駅と一致→同一駅とする
+          halt_name = halts[i][0].get_name()
+          out_str += format(text_halt_rank, _comma_separate(halts[i][1].tostring()), halt_name)
+          n += 1
+        }
+        if(n == num_of_halts) break
+      }
+      out_str += text_halt_caption_rank
+      f.writestr(rstrip(out_str))
+      f.close()
+    } else {
+      // 停車順に一覧を出力（重複を認める）
+      out_str += format(text_halt_title_all, line.get_name() ,pl.get_name())
+      for (local i=0; i<halts.len(); i++) {
+        out_str += halts[i][0].get_name() + "\n"
+      }
+      f.writestr(rstrip(out_str))
+      f.close()
+    }
+  }
+}
