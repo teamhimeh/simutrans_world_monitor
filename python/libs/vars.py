@@ -1,6 +1,9 @@
 import discord
 
-client = discord.Client()
+intents = discord.Intents.default()
+intents.message_content = True
+
+client = discord.Client(intents=intents)
 waiting_message = None
 prev_out_hash = None #二重書き込み対策（主にWindows）
 
