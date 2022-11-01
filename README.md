@@ -8,9 +8,11 @@ pythonプログラムとSquirrel AI Playerから成り立っています．pytho
 
 CLIの使用を前提とします．
 
-1. Python3とpipを導入し， `pip install discord.py watchdog` でライブラリを導入します．
-3. DiscordでBOTアカウントを作成し，BOTをサーバーに招待します．
-   参考: https://discordpy.readthedocs.io/ja/latest/discord.html
+1. Python3（3.8以降が必要）とpipを導入し， `pip install -r python/requirements.txt` でライブラリを導入します．
+2. DiscordでBOTアカウントを作成し，BOTをサーバーに招待します．  
+参考: https://discordpy.readthedocs.io/ja/latest/discord.html
+3. DiscordのBOT設定ページで、BOTに対して"Message Content"インテントを付与します．  
+参考: https://discordpy.readthedocs.io/ja/latest/intents.html#privileged-intents
 4. `python/config.template.py` をコピーして`python/config.py` を作成し，BOTのアクセストークン，メッセージをやり取りするテキストチャンネルのID（Discordで確認できます），Simutransの動作ディレクトリを記入します．UTF-8を扱えるエディタで編集してください．
 5. `sqai_hm_monitor` ディレクトリを，Simutransの動作ディレクトリ下の`ai` ディレクトリにコピーします．
 
